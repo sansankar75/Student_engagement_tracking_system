@@ -18,8 +18,8 @@ def store_class_notes():
     collection=db["notes"]                      # create a collection 
     formatted = time.strftime("%Y-%m-%d %H:%M:%S (%A)", now)               
     data=collection.insert_one({"lesson":lesson,"script":script,"notes":notes,"questions":questions,"geotag":formatted})                    
-"""
-def students_emotions(emotions):
+
+"""def students_emotions(emotions):
     db = client['emotion_of_students']
     collection = db["emotion"]
     
@@ -30,7 +30,17 @@ def students_emotions(emotions):
 
 def emotion_in_real_time(emotion):
     db = client['emotion']
-    collection = db["emotion"]
+    for i in emotion:
+        if i:
+            em=i[1]
+            collection=db[em]
+            collection.insert_one({
+                    'Class':i[1],
+                    'Name':i[0],
+                    'emotion':i[3],
+                    'timestamp':i[2]
+            })    
+
     
     if isinstance(emotion, list) and emotion:
         for i in emotion:

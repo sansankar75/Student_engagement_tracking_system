@@ -1,5 +1,5 @@
 # Face detection using DeepFace package 
-
+"""
 import cv2
 from deepface import DeepFace
 import time
@@ -58,7 +58,10 @@ import concurrent.futures
 import threading
 
 from database_connection import store_class_notes
-from database_connection import students_emotions
+
+from database_connection import emotion_in_real_time
+
+#from database_connection import students_emotions
 
 # Thread-safe results list
 results_lock = threading.Lock()
@@ -91,14 +94,9 @@ def process_video(video_path, name, class_):
 
             # Save detection result with metadata in a thread-safe way
             with results_lock:
-                results.append({
-                    'name': name,
-                    'class': class_,
-                    'timestamp': current_time,
-                    'emotion': emotion,
-                    'video': video_path
-                })
+                results.append([name,class_,current_time,emotion])
 
+            #print(results)
             print(f"[{name} - {class_}] Detected emotion: {emotion}")
 
     cap.release()
@@ -106,9 +104,9 @@ def process_video(video_path, name, class_):
 def main():
     # List of videos and metadata, replace with your actual data source
     video_list = [
-        ('video1.mp4', 'Alice', 'ClassA'),
-        ('video2.mp4', 'Bob', 'ClassB'),
-        ('video3.mp4', 'Charlie', 'ClassC'),
+        ('video1.mp4', 'Alice', 'Class A'),
+        ('video2.mp4', 'Bob', 'Class B'),
+        ('video3.mp4', 'Charlie', 'Class C'),
     ]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -128,8 +126,7 @@ def main():
 
 main() 
 
-store_class_notes()
+emotion_in_real_time(results)
+#store_class_notes()
 
-students_emotions(results)
-
-"""
+#students_emotions(results)
