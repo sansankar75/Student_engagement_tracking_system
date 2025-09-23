@@ -30,3 +30,6 @@ for row in result:
 
 # Close connection
 mydb.close()
+
+
+# i dont have anything to change so i did this 
